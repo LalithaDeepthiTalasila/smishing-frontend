@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -55,6 +56,7 @@ import java.util.Locale;
 public class DetectionsActivity extends AppCompatActivity {
 
     private ListView detectionLV;
+    private TextView emptyStateText;
     DatabaseAccess databaseAccess;
 
     private ActivityResultLauncher<Intent> createCsvLauncher;
@@ -75,6 +77,7 @@ public class DetectionsActivity extends AppCompatActivity {
 
         // List + DataBase
         detectionLV = findViewById(R.id.lvDetectionsList);
+        emptyStateText = findViewById(R.id.emptyStateText);
         databaseAccess = new DatabaseAccess(getApplicationContext());
         databaseAccess.open();
         refreshList();
@@ -89,6 +92,7 @@ public class DetectionsActivity extends AppCompatActivity {
         DisplayDataAdapterView adapter = new DisplayDataAdapterView(this, cursor);
         detectionLV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        updateEmptyState(cursor);
 
         // Search bar
         EditText detSearch = findViewById(R.id.searchTextBox);
@@ -147,6 +151,7 @@ public class DetectionsActivity extends AppCompatActivity {
                 DisplayDataAdapterView filteredAdapter = new DisplayDataAdapterView(this, filteredCursor);
                 detectionLV.setAdapter(filteredAdapter);
                 filteredAdapter.notifyDataSetChanged();
+                updateEmptyState(filteredCursor);
             });
 
             filterFragment.show(getSupportFragmentManager(), filterFragment.getTag());
@@ -246,6 +251,7 @@ public class DetectionsActivity extends AppCompatActivity {
         DisplayDataAdapterView adapter = new DisplayDataAdapterView(this, cursor);
         detectionLV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        updateEmptyState(cursor);
     }
 
     public void sortONDB() {
@@ -254,6 +260,7 @@ public class DetectionsActivity extends AppCompatActivity {
         DisplayDataAdapterView adapter = new DisplayDataAdapterView(this, cursor);
         detectionLV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        updateEmptyState(cursor);
     }
 
     public void sortNODB() {
@@ -262,6 +269,7 @@ public class DetectionsActivity extends AppCompatActivity {
         DisplayDataAdapterView adapter = new DisplayDataAdapterView(this, cursor);
         detectionLV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        updateEmptyState(cursor);
     }
 
     public void refreshList() {
@@ -269,6 +277,13 @@ public class DetectionsActivity extends AppCompatActivity {
         DisplayDataAdapterView adapter = new DisplayDataAdapterView(this, cursor);
         detectionLV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        updateEmptyState(cursor);
+    }
+
+    private void updateEmptyState(Cursor cursor) {
+        boolean isEmpty = cursor == null || cursor.getCount() == 0;
+        emptyStateText.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        detectionLV.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
     public void DeleteRow(String id) {

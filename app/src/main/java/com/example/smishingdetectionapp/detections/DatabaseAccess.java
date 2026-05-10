@@ -58,7 +58,7 @@ public class DatabaseAccess {
     public static class DatabaseOpenHelper extends SQLiteAssetHelper {
 
         private static final String DATABASE_NAME="detectlist.db";
-        private static final int DATABASE_VERSION=1;
+        private static final int DATABASE_VERSION=2;
         private static final String TABLE_DETECTIONS = "Detections";
         private static final String TABLE_REPORTS = "Reports";
         public static final String KEY_ROWID = "_id";
@@ -68,7 +68,7 @@ public class DatabaseAccess {
 
         public DatabaseOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
+            setForcedUpgrade(1);
         }
     }
 
